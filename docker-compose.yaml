@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+
+  app:
+    build: .
+    ports:
+    - "5000:5000"
+    volumes:
+    - ./data:/app/data
+    restart: unless-stopped
+
+
+  nginx:
+    restart: unless-stopped
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/certs
+    depends_on: 
+      - app

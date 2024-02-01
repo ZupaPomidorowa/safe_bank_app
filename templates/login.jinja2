@@ -1,0 +1,17 @@
+{% extends "components/base.jinja2" %}
+{% block main %}
+    <h1>Login</h1>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label>Username</label>
+                <input type="text" required placeholder="Username" name="username" value="{{username}}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" required placeholder="Password" value="{{password}}" name="password" class="form-control">
+            </div>
+                
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </form>
+{% endblock %}

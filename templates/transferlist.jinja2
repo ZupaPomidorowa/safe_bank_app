@@ -1,0 +1,20 @@
+{% extends "components/base2.jinja2" %}
+{% block main %}
+    <table class="w-100 h-100">
+        <tr>
+            {% for header in headings %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in rows %}
+        <tr>
+            {% for cell in row %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+
+   

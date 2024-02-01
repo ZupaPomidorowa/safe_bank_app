@@ -1,0 +1,18 @@
+{% extends "components/base2.jinja2" %}
+{% block main %}
+    <h1>Transfer</h1>
+
+    <form action="/transfer" method="post" class="w-100" enctype="multipart/form-data">
+        <div class="form-group mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" />
+            <label class="form-label">Amount</label>
+            <input type="number" class="form-control" name="amount" />
+            <label class="form-label">Recipient</label>
+            <input type="text" class="form-control" name="recipient" />
+            <label class="form-label">IBAN</label>
+            <input type="text" class="form-control" name="iban" />
+        </div>
+        <input type="submit" class="btn btn-primary" value="Do transfer">
+    </form>
+{% endblock %}

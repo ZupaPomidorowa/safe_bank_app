@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html class="w-100 h-100">
+    <head>
+        <title>BANK</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs//bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous">
+    </head>
+    <body class="w-100 h-100">
+        {% include "components/navbar.jinja2" %}
+
+        {% block main_raw %}
+        <main class="container">
+            {% block main %}
+            {% endblock %}
+        </main>
+        {% endblock %}
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs//bootstrap/5.2.3/js/bootstrap.min.js" integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g==" crossorigin="anonymous"></script>
+        {% block scripts %}
+        {% endblock %}
+    </body>
+</html>
