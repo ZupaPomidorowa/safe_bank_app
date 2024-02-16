@@ -9,7 +9,6 @@ from src.database import DB
 
 COOKIE = ''
 USER = ''
-LETTER_NUM = ''
 
 TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -25,20 +24,14 @@ def check_password(password):
     if not (12 <= len(password) <= 64):
         return False
     return True
-                
-@router.get("/", include_in_schema=False)
-def get_home(request: Request) -> Response:
-    return templates.TemplateResponse("home.jinja2", {
-        "request": request
-    })
 
-@router.get("/login", include_in_schema=False)
+@router.get("/", include_in_schema=False)
 def get_login(request: Request) -> Response:
     return templates.TemplateResponse("login.jinja2", {
         "request": request
     })
 
-@router.post("/login")
+@router.post("/")
 def post_login(request: Request, username: Annotated[str, Form()], password: Annotated[str, Form()]) -> Response:
     user = db.check_user(username, password)
     if user is False:
@@ -48,55 +41,6 @@ def post_login(request: Request, username: Annotated[str, Form()], password: Ann
     COOKIE = str(uuid.uuid4())
 
     db.add_session(username, COOKIE)
-
-    response = RedirectResponse("/dashboard", status_code=301)
-    response.set_cookie(key="session", value=COOKIE, httponly=True)
-    return response
-
-@router.get("/login2", include_in_schema=False)
-def get_login2(request: Request) -> Response:
-    return templates.TemplateResponse("login2.jinja2", {
-        "request": request
-    })
-
-@router.post("/login2")
-def post_login(request: Request, username: Annotated[str, Form()]) -> Response:
-    response = RedirectResponse("/processlogin", status_code=301)
-    global USER 
-    USER = username
-    return response
-
-@router.get("/processlogin", include_in_schema=False)
-def get_processlogin(request: Request) -> Response:
-    global LETTER_NUM
-    LETTER_NUM = db.get_letternum(USER)
-
-    return templates.TemplateResponse("processlogin.jinja2", {
-        "request": request,
-        "letter_num": LETTER_NUM,
-    })
-
-@router.post("/processlogin")
-def post_processlogin(request: Request, 
-                      letter1: Annotated[str, Form()], 
-                      letter2: Annotated[str, Form()], 
-                      letter3: Annotated[str, Form()], 
-                      letter4: Annotated[str, Form()], 
-                      letter5: Annotated[str, Form()]) -> Response:
-    
-    user = db.check_username(USER)
-    if user is False:
-        return RedirectResponse("/error", status_code=301)
-    
-    letters = letter1 + letter2 + letter3 + letter4 + letter5
-    hash = db.check_hash(letters, USER, LETTER_NUM)
-    if hash is False:
-        return RedirectResponse("/error", status_code=301)
-    
-    global COOKIE
-    COOKIE = str(uuid.uuid4())
-
-    db.add_session(USER, COOKIE)
 
     response = RedirectResponse("/dashboard", status_code=301)
     response.set_cookie(key="session", value=COOKIE, httponly=True)
@@ -216,50 +160,3 @@ def post_changepassword(
     })
 
 
-'''
-def check_password(password):
-    if not (12 <= len(password) <= 64):
-        return False
-
-    if not any(char.isupper() for char in password):
-        return False
-
-    if not any(char.isdigit() for char in password):
-        return False
-
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-        return False
-
-    return True
-
-@router.post("/passwordchange", include_in_schema=False)
-def post_changepassword(
-    request: Request,
-    old_pass: Annotated[str, Form()],
-    new_pass1: Annotated[str, Form()],
-    new_pass2: Annotated[str, Form()],
-    get_cookie_key: str | None = Cookie(None)
-) -> Response:
-    check_cookie(get_cookie_key)
-    username = db.get_username(COOKIE)
-    message = {"text": '', "success": False}
-
-    if db.verify_password(username, old_pass):
-        if new_pass1 == new_pass2:
-            if check_password(new_pass1):
-                db.update_password(username, new_pass1)
-                message["text"] = "Password changed successfully."
-                message["success"] = True
-            else:
-                message["text"] = "Password must be 12-64 characters long, must contain at least 1 uppercase letter, 1 number, and 1 special character."
-        else:
-            message["text"] = "New passwords don't match."
-    else:
-        message["text"] = "Incorrect password."
-
-
-    return templates.TemplateResponse("password_change.jinja2", {
-        "request": request,
-        "message": message,
-    })
-'''

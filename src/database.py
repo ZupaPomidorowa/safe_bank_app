@@ -165,34 +165,4 @@ class DB:
         conn.commit()
         conn.close()
 
-    def get_letternum(self, username):
-        conn = self.get_connection()
-        cursor = conn.cursor()
-        
-        result = cursor.execute('SELECT * FROM hash WHERE username = ?', (username, )).fetchall()
-        if len(result) == 0:
-            letter_num = [1, 3, 5, 7, 11]
-            return letter_num
-        
-        result_size = len(result)
-        random_index = random.randint(0, result_size - 1)
-        result = dict(result[random_index])['letternums']
-        result = result.split(',')
-        letter_num = [int(num) for num in result]
-        print(letter_num)
-        return letter_num     
-
-    def check_hash(self, letters, username, letter_num):
-        conn = self.get_connection()
-        cursor = conn.cursor()
-        letter_num = ','.join(map(str, letter_num))
-        result = cursor.execute('SELECT hash FROM hash WHERE username = ? AND letternums = ?', (username, letter_num)).fetchone()
-        result = result[0]
-
-        print(letters)
-        print(result)
-        isValid = argon2.verify(letters, result)
-        print(isValid)
-        conn.close()
-        return isValid
 
